@@ -1,22 +1,54 @@
 var song;
-var sliderRate;
-var sliderPan;
+var button;
+var jumpButton;
 
 
 function setup() {
   createCanvas(200, 200);
-  song = loadSound('Rainbow.mp3', callback);
+  song = loadSound('Highway.mp3', preload);
   song.setVolume(0.5);
-  // sliderRate = createSlider(0, 1.5, 1, 0.01);
-  sliderPan = createSlider(0, 1, 0.5, 0.01);
+
+  button = createButton('play');
+  button.mousePressed(togglePlaying);
+
+  jumpButton = createButton('jump');
+  jumpButton.mousePressed(jump);
+
+  background(51);
+
+  song.addCue(2, changeBackground, color(0, 0, 255));
+  song.addCue(4, changeBackground, color(0, 255, 255));
+  song.addCue(6, changeBackground, color(127, 23, 201));
 }
 
-function callback() {
-  song.play();
+
+function jump() {
+  var len = song.duration();
+  var t = random(len);
+  song.jump(t);
+  console.log(t);
 }
 
-function draw() {
-  background(random(255));
-  song.pan(sliderPan.value());
-  // song.rate(sliderRate.value());
+function changeBackground(col) {
+  background(col);
+  console.log(col);
+}
+
+
+function togglePlaying() {
+  if (!song.isPlaying()) {
+    song.play();
+    button.html('stop');
+  } else {
+    song.stop();
+    button.html('play');
+  }
+}
+
+// function draw() {
+//   background(song.currentTime() * 15, 0, 251);
+// }
+
+function preload() {
+  console.log('preload song');
 }
